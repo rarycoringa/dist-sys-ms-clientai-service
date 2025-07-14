@@ -29,22 +29,22 @@ openai:
         url: https://api.openai.com/v1
 
 resilience4j:
-    retry:
-        instances:
-            distances:
-                maxAttempts: 3
-                waitDuration: 1s
     circuitbreaker:
         instances:
-            distances:
+            openai:
                 slidingWindowSize: 5
                 failureRateThreshold: 50
                 waitDurationInOpenState: 15s
     bulkhead:
         instances:
-            distances:
-                maxWaitDuration: 2ms
-                maxConcurrentCalls: 20
+            openai:
+                maxConcurrentCalls: 5
+    ratelimiter:
+        instances:
+            openai:
+                limitForPeriod: 5
+                limitRefreshPeriod: 1s
+                timeoutDuration: 500ms
 
 eureka:
     client:
@@ -64,3 +64,11 @@ management:
         health:
             show-details: always
             show-components: always
+    tracing:
+        enabled: true
+        sampling:
+            probability: 1.0
+    zipkin:
+        tracing:
+            endpoint: http://zipkin:9411/api/v2/spans
+

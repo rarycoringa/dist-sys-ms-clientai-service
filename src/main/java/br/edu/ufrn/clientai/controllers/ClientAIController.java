@@ -5,31 +5,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.ufrn.clientai.clients.OpenAIApiClient;
-import br.edu.ufrn.clientai.properties.OpenAIProperties;
-import br.edu.ufrn.clientai.records.openai.ResponsesRequest;
-import br.edu.ufrn.clientai.records.openai.ResponsesResponse;
+import br.edu.ufrn.clientai.records.AskResponse;
+import br.edu.ufrn.clientai.services.ClientAIService;
 
 @RestController
 public class ClientAIController {
     @Autowired
-    private OpenAIApiClient openAIApiClient;
+    private ClientAIService clientAIService;
 
-    @Autowired
-    private OpenAIProperties openAIProperties;
+    @GetMapping("/ask")
+    public AskResponse ask(@RequestParam String input) {
 
-    @GetMapping("/restaurants")
-    public String restaurants(@RequestParam String city) {
-        String model = openAIProperties.getModel();
+        String output = clientAIService.ask(input);
 
-        String input = (
-            "Tell me good restaurants to visit on " + city + "."
-            + " Without formatting. Without markdown. Only pure text."
-            + " Not too many words. Not introduction. Splitted by ;"
-        );
-        ResponsesRequest responsesRequest = new ResponsesRequest(model, input);
-        ResponsesResponse responsesResponse = openAIApiClient.responses(responsesRequest);
-
-        return responsesResponse.output().get(0).content().get(0).text();
+        return new AskResponse(input, output);
     }
 }
