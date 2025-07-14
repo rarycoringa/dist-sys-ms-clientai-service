@@ -1,0 +1,26 @@
+services:
+  clientai1:
+    build: .
+    container_name: clientai1
+    environment:
+      - SERVER_PORT=8183
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    ports:
+      - "8183:8183"
+    networks:
+      - dist-sys-ms-network
+
+  clientai2:
+    build: .
+    container_name: clientai2
+    environment:
+      - SERVER_PORT=8184
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    ports:
+      - "8184:8184"
+    networks:
+      - dist-sys-ms-network
+
+networks:
+  dist-sys-ms-network:
+    external: true
