@@ -1,10 +1,11 @@
 package br.edu.ufrn.clientai.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.ufrn.clientai.records.AskRequest;
 import br.edu.ufrn.clientai.records.AskResponse;
 import br.edu.ufrn.clientai.services.ClientAIService;
 
@@ -13,8 +14,10 @@ public class ClientAIController {
     @Autowired
     private ClientAIService clientAIService;
 
-    @GetMapping("/ask")
-    public AskResponse ask(@RequestParam String input) {
+    @PostMapping("/ask")
+    public AskResponse ask(@RequestBody AskRequest request) {
+
+        String input = request.input();
 
         String output = clientAIService.ask(input);
 
